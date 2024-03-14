@@ -2,3 +2,8 @@ numpy==1.22.4
 gradio==4.4.0
 openxlab
 transformers==4.35.2
+langchain==0.0.292
+markdown==3.3.7
+unstructured==0.10.30
+sentence-transformers==2.2.2
+chromadb==0.4.15
