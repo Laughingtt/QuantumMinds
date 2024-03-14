@@ -155,7 +155,7 @@ class Model_center():
 def download_model():
     from openxlab.model import download
     download(model_repo='DD-learning/model_demo',
-             model_name='internll2tmp', output='/home/xlab-app-center')
+             model_name='modeling_internlm2.py', output='/home/xlab-app-center')
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/.cache'))
     try:
@@ -174,7 +174,7 @@ def download_model2():
     print(os.listdir('.'))
     os.system(f'cd ..')
 
-download_model2()
+download_model()
 
 
 
