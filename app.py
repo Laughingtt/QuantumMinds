@@ -153,7 +153,7 @@ class Model_center():
 
 def download_model():
     from openxlab.model import download
-    download(model_repo='DD-learning/model_demo', output='/home/xlab-app-center/llm_model')
+    download(model_repo='DD-learning/model_demo', output='llm_model')
     download(model_repo='youngdon/AMchat',output='model')
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/llm_model'))
