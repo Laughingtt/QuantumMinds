@@ -21,7 +21,7 @@ class Model_center():
             return "", chat_history
         try:
             bot_message = random.choice(["How are you?", "Hello Hello Hello", "I'm hungry"])
-            bot_message=os.listdir('.')
+            bot_message=str(os.listdir('.'))
             chat_history.append(
                 (question, bot_message))
             # 将问答结果直接附加到问答历史中，Gradio 会将其展示出来
