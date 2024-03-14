@@ -152,9 +152,20 @@ class Model_center():
             return e, chat_history
 
 def download_model():
+    import openxlab
     from openxlab.model import download
+    openxlab.login('g4dz0p2pmw5vqvxxnpjz','5d6m4l7vbp0ndra2pznql3y5egeyzorykxle1m8o')
+
     download(model_repo='DD-learning/llm', output='llm_model')
+    print(os.listdir('.'))
+
     download(model_repo='OpenLMLab/InternLM-chat-7b',output='model')
+    print(os.listdir('.'))
+
+
+    from openxlab.dataset import get
+    get(dataset_repo='DD-learning/llm', target_path='llm_data')  # 数据集下载
+
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/llm_model'))
     print(os.listdir('model'))
