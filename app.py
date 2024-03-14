@@ -154,7 +154,7 @@ class Model_center():
 
 def download_model():
     from openxlab.model import download
-    download(model_repo='DD-learning/model_demo',
+    download(model_repo='DD-learning/https://openxlab.org.cn/models/detail/DD-learning/model_demo/tree/main',
              model_name='model_demo', output='/home/xlab-app-center')
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/.cache'))
