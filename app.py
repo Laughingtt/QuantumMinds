@@ -155,8 +155,9 @@ class Model_center():
 def download_model():
     from openxlab.model import download
     download(model_repo='DD-learning/model_demo',
-             model_name='model_demo', file='internlm2-chat-7b')
+             model_name='model_demo', output='/home/xlab-app-center')
     print(os.listdir('.'))
+    print(os.listdir('/home/xlab-app-center/.cache'))
 
 
 download_model()
