@@ -1,6 +1,40 @@
 import gradio as gr
 import random
 import os
+import json
+import requests
+
+
+def call_model(prompt):
+    token = os.getenv('WToken')
+    url = 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie-lite-8k'
+    url += '?access_token=' + token
+
+    headers = {'Content-Type': 'application/json'}
+    payload = json.dumps({
+        "messages": prompt,
+        "disable_search": False,
+        "enable_citation": False
+        # "max_output_tokens": 500
+    })
+
+    resp = requests.request("POST", url, headers=headers, data=payload)
+    result = json.loads(resp.text)['result']
+
+    return result
+
+
+def chat(user_input, history=[]):
+    current_line = {'role': 'user', 'content': user_input}
+    if len(history) == 0:
+        prompt = [current_line]
+        history = [current_line]
+    else:
+        prompt = history.append(current_line)
+
+    response = call_model(prompt)
+    history.append({'role': 'assistant', 'content': response})
+    return response, history
 
 
 class Model_center():
@@ -21,7 +55,7 @@ class Model_center():
             return "", chat_history
         try:
             bot_message = random.choice(["How are you?", "Hello Hello Hello", "I'm hungry"])
-            bot_message=str(os.listdir('.'))
+            bot_message = str(os.listdir('/home/xlab-app-center'))
             chat_history.append(
                 (question, bot_message))
             # 将问答结果直接附加到问答历史中，Gradio 会将其展示出来
@@ -29,14 +63,31 @@ class Model_center():
         except Exception as e:
             return e, chat_history
 
-def download_model():
-    from openxlab.model import download
-    download(model_repo='DD-learning/model_demo',
-             model_name='model_demo', output='/home/xlab-app-center')
-    print(os.listdir('.'))
+    def qa_chain_self_answer_wenxin(self, question: str, chat_history: list = []):
+        """
+        调用问答链进行回答
+        """
+        wenxin_history = []
+        if question == None or len(question) < 1:
+            return "", chat_history
+        try:
+            response, wenxin_history = chat(question, wenxin_history)
+            chat_history.append(
+                (question, response))
+            # 将问答结果直接附加到问答历史中，Gradio 会将其展示出来
+            return "", chat_history
+        except Exception as e:
+            return e, chat_history
 
 
-download_model()
+# def download_model():
+#     from openxlab.model import download
+#     download(model_repo='DD-learning/model_demo',
+#              model_name='model_demo', output='/home/xlab-app-center')
+#     print(os.listdir('.'))
+#
+#
+# download_model()
 # 实例化核心功能对象
 model_center = Model_center()
 # 创建一个 Web 界面
@@ -45,8 +96,8 @@ with block as demo:
     with gr.Row(equal_height=True):
         with gr.Column(scale=15):
             # 展示的页面标题
-            gr.Markdown("""<h1><center>InternLM</center></h1>
-                <center>金科demo</center>
+            gr.Markdown("""<h1><center>LLM</center></h1>
+                <center>金科Demo</center>
                 """)
 
     with gr.Row():
@@ -58,14 +109,14 @@ with block as demo:
 
             with gr.Row():
                 # 创建提交按钮。
-                db_wo_his_btn = gr.Button("Chat",scale=1)
+                db_wo_his_btn = gr.Button("Chat", scale=1)
             with gr.Row():
                 # 创建一个清除按钮，用于清除聊天机器人组件的内容。
                 clear = gr.ClearButton(
                     components=[chatbot], value="Clear console")
 
         # 设置按钮的点击事件。当点击时，调用上面定义的 qa_chain_self_answer 函数，并传入用户的消息和聊天历史记录，然后更新文本框和聊天机器人组件。
-        db_wo_his_btn.click(model_center.qa_chain_self_answer, inputs=[
+        db_wo_his_btn.click(model_center.qa_chain_self_answer_wenxin, inputs=[
             msg, chatbot], outputs=[msg, chatbot])
 
     gr.Markdown("""提醒：<br>
