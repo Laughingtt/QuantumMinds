@@ -26,6 +26,13 @@ class Model_center():
         except Exception as e:
             return e, chat_history
 
+def download_model():
+    import os
+    from openxlab.model import download
+    download(model_repo='DD-learning/model_demo',
+             model_name='model_demo', output='/home/xlab-app-center')
+    print(os.listdir('.'))
+
 
 # 实例化核心功能对象
 model_center = Model_center()
