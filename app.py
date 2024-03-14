@@ -81,7 +81,7 @@ def load_InternLM_chain():
     # 切分文件
 
     # 加载自定义 LLM
-    llm = InternLM_LLM(model_path="/home/xlab-app-center/internlm2-chat-7b")
+    llm = InternLM_LLM(model_path="/home/xlab-app-center/llm_model")
 
     # 定义一个 Prompt Template
     template = """使用以下上下文来回答最后的问题。如果你不知道答案，就说你不知道，不要试图编造答
@@ -140,7 +140,6 @@ class Model_center():
         调用问答链进行回答
         """
         internlm_predict = load_InternLM_chain()
-        wenxin_history = []
         if question == None or len(question) < 1:
             return "", chat_history
         try:
@@ -205,7 +204,7 @@ with block as demo:
                     components=[chatbot], value="Clear console")
 
         # 设置按钮的点击事件。当点击时，调用上面定义的 qa_chain_self_answer 函数，并传入用户的消息和聊天历史记录，然后更新文本框和聊天机器人组件。
-        db_wo_his_btn.click(model_center.qa_chain_self_answer_demo, inputs=[
+        db_wo_his_btn.click(model_center.qa_chain_self_answer_interlm, inputs=[
             msg, chatbot], outputs=[msg, chatbot])
 
     gr.Markdown("""提醒：<br>
