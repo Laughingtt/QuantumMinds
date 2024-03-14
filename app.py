@@ -154,8 +154,8 @@ class Model_center():
 
 def download_model():
     from openxlab.model import download
-    download(model_repo='DD-learning/https://openxlab.org.cn/models/detail/DD-learning/model_demo/tree/main',
-             model_name='model_demo', output='/home/xlab-app-center')
+    download(model_repo='DD-learning/model_demo',
+             model_name='internll2tmp', output='/home/xlab-app-center')
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/.cache'))
     try:
