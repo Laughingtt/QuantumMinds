@@ -81,7 +81,7 @@ def load_InternLM_chain():
     # 切分文件
 
     # 加载自定义 LLM
-    llm = InternLM_LLM(model_path="/home/xlab-app-center/llm_model")
+    llm = InternLM_LLM(model_path="model")
 
     # 定义一个 Prompt Template
     template = """使用以下上下文来回答最后的问题。如果你不知道答案，就说你不知道，不要试图编造答
@@ -154,13 +154,10 @@ class Model_center():
 def download_model():
     from openxlab.model import download
     download(model_repo='DD-learning/model_demo', output='/home/xlab-app-center/llm_model')
+    download(model_repo='youngdon/AMchat',output='model')
     print(os.listdir('.'))
-    print(os.listdir('/home/xlab-app-center/.cache'))
-    try:
-        print(os.listdir('/home/xlab-app-center/huggingface'))
-        print(os.listdir('/home/xlab-app-center/matplotlib'))
-    except Exception as e:
-        pass
+    print(os.listdir('/home/xlab-app-center/llm_model'))
+    print(os.listdir('model'))
 
 def download_model2():
     base_path = './llm_model'
