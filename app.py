@@ -154,8 +154,7 @@ class Model_center():
 
 def download_model():
     from openxlab.model import download
-    download(model_repo='DD-learning/model_demo',
-             model_name='modeling_internlm2.py', output='/home/xlab-app-center')
+    download(model_repo='DD-learning/model_demo', output='/home/xlab-app-center/llm_model')
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/.cache'))
     try:
