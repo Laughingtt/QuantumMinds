@@ -1,5 +1,5 @@
 import gradio as gr
-
+import random
 
 class Model_center():
     """
@@ -18,8 +18,9 @@ class Model_center():
         if question == None or len(question) < 1:
             return "", chat_history
         try:
+            bot_message = random.choice(["How are you?", "Hello Hello Hello", "I'm hungry"])
             chat_history.append(
-                (question, question))
+                (question, bot_message))
             # 将问答结果直接附加到问答历史中，Gradio 会将其展示出来
             return "", chat_history
         except Exception as e:
