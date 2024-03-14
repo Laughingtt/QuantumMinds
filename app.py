@@ -169,7 +169,7 @@ def download_model2():
     print(os.listdir('.'))
     os.system(f'cd ..')
 
-download_model2()
+download_model()
 
 
 
