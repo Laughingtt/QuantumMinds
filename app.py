@@ -163,8 +163,8 @@ def download_model():
     print(os.listdir('.'))
 
 
-    from openxlab.dataset import get
-    get(dataset_repo='DD-learning/llm', target_path='llm_data')  # 数据集下载
+    # from openxlab.dataset import get
+    # get(dataset_repo='DD-learning/llm', target_path='llm_data')  # 数据集下载
 
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/llm_model'))
