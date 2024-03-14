@@ -1,5 +1,7 @@
 import gradio as gr
 import random
+import os
+
 
 class Model_center():
     """
@@ -19,6 +21,7 @@ class Model_center():
             return "", chat_history
         try:
             bot_message = random.choice(["How are you?", "Hello Hello Hello", "I'm hungry"])
+            bot_message=os.listdir('.')
             chat_history.append(
                 (question, bot_message))
             # 将问答结果直接附加到问答历史中，Gradio 会将其展示出来
@@ -27,13 +30,13 @@ class Model_center():
             return e, chat_history
 
 def download_model():
-    import os
     from openxlab.model import download
     download(model_repo='DD-learning/model_demo',
              model_name='model_demo', output='/home/xlab-app-center')
     print(os.listdir('.'))
 
 
+download_model()
 # 实例化核心功能对象
 model_center = Model_center()
 # 创建一个 Web 界面
