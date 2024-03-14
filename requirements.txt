@@ -1,4 +1,4 @@
- numpy==1.22.4
- gradio==4.4.0
- openxlab
- transformers=4.37.2
+numpy==1.22.4
+gradio==4.4.0
+openxlab
+transformers==4.35.2
