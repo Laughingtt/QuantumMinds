@@ -158,10 +158,11 @@ def download_model():
              model_name='model_demo', output='/home/xlab-app-center')
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/.cache'))
-    print(os.listdir('/home/xlab-app-center/share'))
-    print(os.listdir('/home/xlab-app-center/fontconfig'))
-    print(os.listdir('/home/xlab-app-center/huggingface'))
-    print(os.listdir('/home/xlab-app-center/matplotlib'))
+    try:
+        print(os.listdir('/home/xlab-app-center/huggingface'))
+        print(os.listdir('/home/xlab-app-center/matplotlib'))
+    except Exception as e:
+        pass
 
 
 download_model()
