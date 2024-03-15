@@ -3,6 +3,7 @@ import random
 import os
 import json
 import requests
+import time
 
 
 class WenXinChat:
@@ -145,6 +146,38 @@ def download_model2():
 # download_model()
 
 
+def user_action(user_msg, bot):
+    bot.append([user_msg, None])
+    return '', bot
+
+
+def bot_action(bot):
+    user_input = bot[-1][0]
+    internlm_predict = load_InternLM_chain()
+    if user_input == None or len(user_input) < 1:
+        response = ''
+    try:
+        response = internlm_predict(user_input)
+    except Exception as e:
+        response = e
+
+    bot[-1][1] = ''
+    for c in response:
+        bot[-1][1] += c
+        time.sleep(0.005)
+        yield bot
+    return bot
+
+
+def bot_action_demo(bot):
+    user_input = bot[-1][0]
+
+    response = random.choice(["How are you?", "Hello Hello Hello", "I'm hungry"])
+
+    bot[-1][1] = response
+    return bot
+
+
 # 实例化核心功能对象
 model_center = Model_center()
 # 创建一个 Web 界面
@@ -152,65 +185,51 @@ block = gr.Blocks()
 with block as demo:
     with gr.Row(equal_height=True):
         gr.Image('images/yingying.webp', width=100, scale=0)
-        with gr.Column(scale=15):
-            # 展示的页面标题
-            gr.Markdown(
-                '''
-                # 知心大姐“唠五毛”
+        # 展示的页面标题
+        gr.Markdown(
+            '''
+            # 知心大姐“唠五毛”
 
-                智能小助手：小萤火，小名叫萤萤，希望微微萤火能照亮诉说者前行的路和心灵的光...
+            智能小助手：小萤火，小名叫萤萤，希望微微萤火能照亮诉说者前行的路和心灵的光...
 
-                一个懂你的陪伴型机器人，为你打造一片心灵的栖息地。
-                在这里，你可以尽情倾诉，释放内心的情感，让心灵得到慰藉。让我们开始今天的谈话吧！
-                ''')
+            一个懂你的陪伴型机器人，为你打造一片心灵的栖息地。
+            在这里，你可以尽情倾诉，释放内心的情感，让心灵得到慰藉。让我们开始今天的谈话吧！
+            ''')
+
+    # 创建一个聊天机器人对象
+    chatbot = gr.Chatbot(height=400, bubble_full_width=False, show_label=False,
+                         avatar_images=("images/xiaobai.png", "images/yingying.webp")
+                         )
+    first = """    ### 唠五毛 - 为你提供情绪价值的智能机器人"""
 
     with gr.Row():
-        with gr.Column(scale=4):
-            # 创建一个聊天机器人对象
-            chatbot = gr.Chatbot(height=850, show_copy_button=True,
-                                 avatar_images=("images/xiaobai.png", "images/yingying.webp"),
-                                 label="唠五毛")
-            first = """
-### 唠五毛 - 为你提供情绪价值的智能机器人
+        msg = gr.Textbox(placeholder="您可以问我任何问题...", scale=10, show_label=False)
 
-一个懂你的陪伴型机器人，为你打造一片心灵的栖息地。在这里，你可以尽情倾诉，释放内心的情感，让心灵得到慰藉。让我们开始今天的谈话吧！
-\n
-试试以下问题：
-\n
-1.自我探索
+        db_wo_his_btn = gr.Button("发送", scale=1, icon="images/send.webp")
 
-    我是讨好型人格，感觉自己活的很卑微不快乐，我可以改变吗？
-
-2.情感问题
-
-    失恋为什么这么痛苦，能从心理学的角度帮我分析一下吗？
-
-3.学业烦恼
-
-    我最近学习成绩下降，感觉很难集中注意力，这让我很焦虑。我该怎么办呢？"""
-            chatbot.value = [[None, first]]
-
-            # 创建一个文本框组件，用于输入 prompt。
-            with gr.Row():
-                # 创建提交按钮。
-                msg = gr.Textbox(label="问题", lines=3, placeholder="点击发送", scale=20,
-                                 show_label=False)
-                db_wo_his_btn = gr.Button("发送", scale=1, icon="images/send.webp")
-
-            with gr.Row():
-                # 创建一个清除按钮，用于清除聊天机器人组件的内容。
-                clear = gr.ClearButton(
-                    components=[chatbot], value="Clear console", scale=1)
-                chatbot.value = [[None, first]]
-
-        # 设置按钮的点击事件。当点击时，调用上面定义的 qa_chain_self_answer 函数，并传入用户的消息和聊天历史记录，然后更新文本框和聊天机器人组件。
         db_wo_his_btn.click(model_center.qa_chain_self_answer_demo, inputs=[
             msg, chatbot], outputs=[msg, chatbot])
+        clear_btn = gr.ClearButton([msg, chatbot], value="清除历史", scale=0)
 
-    gr.Markdown("""提醒：<br>
-    1. 初始化数据库时间可能较长，请耐心等待。
-    2. 使用中如果出现异常，将会在文本输入框进行展示，请不要惊慌。 <br>
-    """)
+    gr.Markdown('<br>')
+    gr.Markdown('### 您也可以试试这些问题：')
+    with gr.Row():
+        samples = [
+            '我是讨好型人格，感觉自己活的很卑微不快乐，我可以改变吗？',
+            '失恋为什么这么痛苦，能从心理学的角度帮我分析一下吗？',
+            '抑郁症怎么解决呢？',
+            '如果我不够优秀的话，是不是在别人眼里就没有价值？'
+        ]
+
+        btns = []
+        for i in range(len(samples)):
+            btns.append(gr.Button(samples[i], scale=1, size='sm'))
+            btns[i].click(user_action, [btns[i], chatbot], [msg, chatbot]).then(
+                bot_action_demo, chatbot, chatbot)
+
+    gr.Markdown('<br>')
+    gr.Markdown('提醒：初始化数据库时间可能较长，请耐心等待。')
+
 gr.close_all()
 # 直接启动
 demo.launch()
