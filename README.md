@@ -8,8 +8,7 @@
 
 在线体验Demo：[[OpenXLab]](https://openxlab.org.cn/apps/detail/DD-learning/LLM-LaoWuMao)
 
-
-![img.png](images%2Fimg.png)
+![yingying.png](images%2Fyingying.png)
 
 # 背景
 随着社会的发展、竞争关系的加剧、现代人的工作和生活节奏越来越快，大家的心理压力都急剧增加，心理健康问题也日益突出。特别是这几年在新冠疫情的影响下，据丁香医生《2022国民健康洞察报告》，91%的人自认为有心理问题，这些问题具有多样性和普遍性，主要表现在以下几个方向：
