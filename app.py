@@ -5,37 +5,39 @@ import json
 import requests
 
 
+class WenXinChat:
 
-def call_model(prompt):
-    token = os.getenv('WToken')
-    url = 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie-lite-8k'
-    url += '?access_token=' + token
+    @staticmethod
+    def call_model(prompt):
+        token = os.getenv('WToken')
+        url = 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie-lite-8k'
+        url += '?access_token=' + token
 
-    headers = {'Content-Type': 'application/json'}
-    payload = json.dumps({
-        "messages": prompt,
-        "disable_search": False,
-        "enable_citation": False
-        # "max_output_tokens": 500
-    })
+        headers = {'Content-Type': 'application/json'}
+        payload = json.dumps({
+            "messages": prompt,
+            "disable_search": False,
+            "enable_citation": False
+            # "max_output_tokens": 500
+        })
 
-    resp = requests.request("POST", url, headers=headers, data=payload)
-    result = json.loads(resp.text)['result']
+        resp = requests.request("POST", url, headers=headers, data=payload)
+        result = json.loads(resp.text)['result']
 
-    return result
+        return result
 
+    @staticmethod
+    def wenxin_chat(user_input, history=[]):
+        current_line = {'role': 'user', 'content': user_input}
+        if len(history) == 0:
+            prompt = [current_line]
+            history = [current_line]
+        else:
+            prompt = history.append(current_line)
 
-def wenxin_chat(user_input, history=[]):
-    current_line = {'role': 'user', 'content': user_input}
-    if len(history) == 0:
-        prompt = [current_line]
-        history = [current_line]
-    else:
-        prompt = history.append(current_line)
-
-    response = call_model(prompt)
-    history.append({'role': 'assistant', 'content': response})
-    return response, history
+        response = WenXinChat.call_model(prompt)
+        history.append({'role': 'assistant', 'content': response})
+        return response, history
 
 
 def load_InternLM_chain():
@@ -52,6 +54,7 @@ def load_InternLM_chain():
     有用的回答:"""
 
     return llm.predict
+
 
 class Model_center():
     """
@@ -87,14 +90,13 @@ class Model_center():
         if question == None or len(question) < 1:
             return "", chat_history
         try:
-            response, wenxin_history = wenxin_chat(question, wenxin_history)
+            response, wenxin_history = WenXinChat.wenxin_chat(question, wenxin_history)
             chat_history.append(
                 (question, response))
             # 将问答结果直接附加到问答历史中，Gradio 会将其展示出来
             return "", chat_history
         except Exception as e:
             return e, chat_history
-
 
     def qa_chain_self_answer_interlm(self, question: str, chat_history: list = []):
         """
@@ -112,23 +114,21 @@ class Model_center():
         except Exception as e:
             return e, chat_history
 
+
 def download_model():
     import openxlab
     from openxlab.model import download
-    openxlab.login('g4dz0p2pmw5vqvxxnpjz','5d6m4l7vbp0ndra2pznql3y5egeyzorykxle1m8o')
+    openxlab.login('g4dz0p2pmw5vqvxxnpjz', '5d6m4l7vbp0ndra2pznql3y5egeyzorykxle1m8o')
 
     download(model_repo='DD-learning/llm', output='llm_model')
     print(os.listdir('.'))
-
-    # download(model_repo='OpenLMLab/InternLM-chat-7b',output='model')
-    # print(os.listdir('.'))
-
 
     # from openxlab.dataset import get
     # get(dataset_repo='DD-learning/llm', target_path='llm_data')  # 数据集下载
 
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/llm_model'))
+
 
 def download_model2():
     base_path = './llm_model'
@@ -140,8 +140,9 @@ def download_model2():
     print(os.listdir('.'))
     os.system(f'cd ..')
 
-# download_model()
 
+# 下载模型
+# download_model()
 
 
 # 实例化核心功能对象
@@ -166,7 +167,8 @@ with block as demo:
     with gr.Row():
         with gr.Column(scale=4):
             # 创建一个聊天机器人对象
-            chatbot = gr.Chatbot(height=850, show_copy_button=True, avatar_images=("images/xiaobai.png", "images/yingying.webp"),
+            chatbot = gr.Chatbot(height=850, show_copy_button=True,
+                                 avatar_images=("images/xiaobai.png", "images/yingying.webp"),
                                  label="唠五毛")
             first = """
 ### 唠五毛 - 为你提供情绪价值的智能机器人
