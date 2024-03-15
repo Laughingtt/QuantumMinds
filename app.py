@@ -5,45 +5,6 @@ import json
 import requests
 
 
-from langchain.llms.base import LLM
-from typing import Any, List, Optional
-from langchain.callbacks.manager import CallbackManagerForLLMRun
-from transformers import AutoTokenizer, AutoModelForCausalLM
-import torch
-# from langchain.prompts import PromptTemplate
-# from langchain.chains import RetrievalQA
-
-class InternLM_LLM(LLM):
-    # 基于本地 InternLM 自定义 LLM 类
-    tokenizer: AutoTokenizer = None
-    model: AutoModelForCausalLM = None
-
-    def __init__(self, model_path: str):
-        # model_path: InternLM 模型路径
-        # 从本地初始化模型
-        super().__init__()
-        print("正在从本地加载模型...")
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
-        self.model = AutoModelForCausalLM.from_pretrained(model_path, trust_remote_code=True).to(torch.bfloat16).cuda()
-        self.model = self.model.eval()
-        print("完成本地模型的加载")
-
-    def _call(self, prompt: str, stop: Optional[List[str]] = None,
-              run_manager: Optional[CallbackManagerForLLMRun] = None,
-              **kwargs: Any):
-        # 重写调用函数
-        system_prompt = """你名叫萤萤，是一个陪伴型聊天机器人，负责安慰，鼓励，以及心理治愈。
-        - YingYing is a conversational language model that is developed by SSJT (上海数据集团). It is designed to be helpful, honest, and harmless.
-        - YingYing (萤萤) can understand and communicate fluently in the language chosen by the user such as English and 中文.
-        """
-
-        messages = [(system_prompt, '')]
-        response, history = self.model.chat(self.tokenizer, prompt, history=messages)
-        return response
-
-    @property
-    def _llm_type(self) -> str:
-        return "InternLM"
 
 def call_model(prompt):
     token = os.getenv('WToken')
@@ -110,7 +71,7 @@ class Model_center():
             return "", chat_history
         try:
             bot_message = random.choice(["How are you?", "Hello Hello Hello", "I'm hungry"])
-            bot_message = str(os.listdir(question))
+            # bot_message = str(os.listdir(question))
             chat_history.append(
                 (question, bot_message))
             # 将问答结果直接附加到问答历史中，Gradio 会将其展示出来
@@ -159,8 +120,8 @@ def download_model():
     download(model_repo='DD-learning/llm', output='llm_model')
     print(os.listdir('.'))
 
-    download(model_repo='OpenLMLab/InternLM-chat-7b',output='model')
-    print(os.listdir('.'))
+    # download(model_repo='OpenLMLab/InternLM-chat-7b',output='model')
+    # print(os.listdir('.'))
 
 
     # from openxlab.dataset import get
@@ -168,7 +129,6 @@ def download_model():
 
     print(os.listdir('.'))
     print(os.listdir('/home/xlab-app-center/llm_model'))
-    print(os.listdir('model'))
 
 def download_model2():
     base_path = './llm_model'
@@ -180,7 +140,7 @@ def download_model2():
     print(os.listdir('.'))
     os.system(f'cd ..')
 
-download_model()
+# download_model()
 
 
 
@@ -190,29 +150,59 @@ model_center = Model_center()
 block = gr.Blocks()
 with block as demo:
     with gr.Row(equal_height=True):
+        gr.Image('images/yingying.webp', width=100, scale=0)
         with gr.Column(scale=15):
             # 展示的页面标题
-            gr.Markdown("""<h1><center>LLM</center></h1>
-                <center>金科Demo</center>
-                """)
+            gr.Markdown(
+                '''
+                # 知心大姐“唠五毛”
+
+                智能小助手：小萤火，小名叫萤萤，希望微微萤火能照亮诉说者前行的路和心灵的光...
+
+                一个懂你的陪伴型机器人，为你打造一片心灵的栖息地。
+                在这里，你可以尽情倾诉，释放内心的情感，让心灵得到慰藉。让我们开始今天的谈话吧！
+                ''')
 
     with gr.Row():
         with gr.Column(scale=4):
             # 创建一个聊天机器人对象
-            chatbot = gr.Chatbot(height=450, show_copy_button=True)
-            # 创建一个文本框组件，用于输入 prompt。
-            msg = gr.Textbox(label="问题", lines=2, placeholder="Enter发送，Shift+Enter换行")
+            chatbot = gr.Chatbot(height=850, show_copy_button=True, avatar_images=("images/xiaobai.png", "images/yingying.webp"),
+                                 label="唠五毛")
+            first = """
+### 唠五毛 - 为你提供情绪价值的智能机器人
 
+一个懂你的陪伴型机器人，为你打造一片心灵的栖息地。在这里，你可以尽情倾诉，释放内心的情感，让心灵得到慰藉。让我们开始今天的谈话吧！
+\n
+试试以下问题：
+\n
+1.自我探索
+
+    我是讨好型人格，感觉自己活的很卑微不快乐，我可以改变吗？
+
+2.情感问题
+
+    失恋为什么这么痛苦，能从心理学的角度帮我分析一下吗？
+
+3.学业烦恼
+
+    我最近学习成绩下降，感觉很难集中注意力，这让我很焦虑。我该怎么办呢？"""
+            chatbot.value = [[None, first]]
+
+            # 创建一个文本框组件，用于输入 prompt。
             with gr.Row():
                 # 创建提交按钮。
-                db_wo_his_btn = gr.Button("Chat", scale=1)
+                msg = gr.Textbox(label="问题", lines=3, placeholder="点击发送", scale=20,
+                                 show_label=False)
+                db_wo_his_btn = gr.Button("发送", scale=1, icon="images/send.webp")
+
             with gr.Row():
                 # 创建一个清除按钮，用于清除聊天机器人组件的内容。
                 clear = gr.ClearButton(
-                    components=[chatbot], value="Clear console")
+                    components=[chatbot], value="Clear console", scale=1)
+                chatbot.value = [[None, first]]
 
         # 设置按钮的点击事件。当点击时，调用上面定义的 qa_chain_self_answer 函数，并传入用户的消息和聊天历史记录，然后更新文本框和聊天机器人组件。
-        db_wo_his_btn.click(model_center.qa_chain_self_answer_interlm, inputs=[
+        db_wo_his_btn.click(model_center.qa_chain_self_answer_demo, inputs=[
             msg, chatbot], outputs=[msg, chatbot])
 
     gr.Markdown("""提醒：<br>
