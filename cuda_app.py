@@ -201,7 +201,7 @@ if __name__ == '__main__':
                 ''')
 
         # 创建一个聊天机器人对象
-        chatbot = gr.Chatbot(height=400, bubble_full_width=False, show_label=False,
+        chatbot = gr.Chatbot(height=700, bubble_full_width=False, show_label=False,
                              avatar_images=("images/xiaobai.png", "images/yingying.webp")
                              )
         first = """    ### 唠五毛 - 为你提供情绪价值的智能机器人"""
@@ -215,7 +215,6 @@ if __name__ == '__main__':
             db_wo_his_btn.click(model_center.qa_chain_self_answer, inputs=[msg, chatbot], outputs=[msg, chatbot])
 
             clear_btn = gr.ClearButton([msg, chatbot], value="清除历史", scale=0)
-
 
         gr.Markdown('<br>')
         gr.Markdown('### 您也可以试试这些问题：')
@@ -238,4 +237,4 @@ if __name__ == '__main__':
 
     gr.close_all()
     # 直接启动
-    demo.launch(share=True)
+    demo.launch(share=False, server_name="0.0.0.0")

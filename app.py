@@ -197,7 +197,7 @@ with block as demo:
             ''')
 
     # 创建一个聊天机器人对象
-    chatbot = gr.Chatbot(height=400, bubble_full_width=False, show_label=False,
+    chatbot = gr.Chatbot(height=700, bubble_full_width=False, show_label=False,
                          avatar_images=("images/xiaobai.png", "images/yingying.webp")
                          )
     first = """    ### 唠五毛 - 为你提供情绪价值的智能机器人"""
