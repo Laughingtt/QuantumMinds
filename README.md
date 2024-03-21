@@ -331,3 +331,8 @@ tutorial 中的 internlm2_chat_7b_qlora_oasst1_e3_copy 微调模板进行了修�
 31. 《遇见未知的自己》- 张德芬
 32. 《橘子不是唯一的水果》- 珍妮特·温特森
 33. 《沉思录：一位罗马帝王的哲学思考》- 马尔库斯·奥勒利乌斯
+
+
+# 5. 引用仓库
+- [InternLM](https://github.com/InternLM/InternLM) - Official release of InternLM2 7B and 20B base and chat models. 200K context support
+- [KGQA-Psychological-Counseling](https://github.com/fumuling/KGQA-Psychological-Counseling) - 基于知识图谱的心理咨询智能问答系统
