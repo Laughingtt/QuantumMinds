@@ -4,7 +4,7 @@
 
 模型仓库： [[OpenXLab]](https://openxlab.org.cn/models/detail/DD-learning/InternLM-LaoWuMao)
 
-演示视频：[[BiliBili]](https://www.bilibili.com/)
+演示视频：[[BiliBili]](https://www.bilibili.com/video/BV1ey421v7ED/?vd_source=16767f3f20bb565fbab7d8c5b43737ef)
 
 在线体验Demo：[[OpenXLab]](https://demo.shdgft.com/)
 
