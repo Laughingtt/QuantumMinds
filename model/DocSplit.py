@@ -1,7 +1,5 @@
 from tqdm import tqdm
-from langchain.document_loaders import UnstructuredFileLoader
 from langchain.document_loaders import UnstructuredMarkdownLoader
-# from langchain.document_loaders import UnstructuredPDFLoader
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.document_loaders import TextLoader
 import os 
