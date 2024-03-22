@@ -194,7 +194,7 @@ model_center = Model_center()
 block = gr.Blocks()
 with block as demo:
     with gr.Row(equal_height=True):
-        gr.Image('images/yingying.webp', width=100, scale=0)
+        gr.Image('images/yingying.webp', width=100, scale=0, show_label=False, show_download_button=False)
         # 展示的页面标题
         gr.Markdown(
             '''
@@ -213,13 +213,13 @@ with block as demo:
     first = """    ### 唠五毛 - 为你提供情绪价值的智能机器人"""
 
     with gr.Row():
-        msg = gr.Textbox(placeholder="您可以问我任何问题...", scale=10, show_label=False)
+        msg = gr.Textbox(placeholder="您可以问我任何问题，按下Enter返回答案", scale=10, show_label=False)
         msg.submit(user_action, [msg, chatbot], [msg, chatbot], queue=False).then(
             bot_action_demo, chatbot, chatbot)
 
-        db_wo_his_btn = gr.Button("发送", scale=1, icon="images/send.webp")
-
-        db_wo_his_btn.click(model_center.qa_chain_self_answer_demo, inputs=[msg, chatbot], outputs=[msg, chatbot])
+        # db_wo_his_btn = gr.Button("发送", scale=1, icon="images/send.webp")
+        #
+        # db_wo_his_btn.click(model_center.qa_chain_self_answer_demo, inputs=[msg, chatbot], outputs=[msg, chatbot])
         clear_btn = gr.ClearButton([msg, chatbot], value="清除历史", scale=0)
         # db_wo_his_btn.click(model_center.qa_chain_self_answer_demo, inputs=[msg, chatbot], outputs=[msg, chatbot])
 
@@ -244,4 +244,4 @@ with block as demo:
 
 gr.close_all()
 # 直接启动
-demo.launch(share=False, server_name="0.0.0.0")
+demo.launch(share=False)

@@ -1,3 +1,5 @@
+import copy
+
 from kgqa.chatbot_graph import ChatBotGraph
 from model.load_chain import load_chain
 
@@ -35,10 +37,12 @@ class Model_center(object):
 
             kg_result = self.get_kb_graph(question)
             if kg_result:
-                question = "我的问题是 :{} 请参考查询的资料:{} 来回答我的问题，请按照你自己的理解，尽量用温和的语气鼓励，安慰提问者。总是在回答的最后说“谢谢你的提问".format(
+                question_comb = "我的问题是 :{} 请参考查询的资料:{} 来回答我的问题，请按照你自己的理解，尽量用温和的语气鼓励，安慰提问者。总是在回答的最后说“谢谢你的提问".format(
                     question, kg_result)
+            else:
+                question_comb = copy.deepcopy(question)
 
-            chat_response = self.chain({self.question: question})[self.result]
+            chat_response = self.chain({self.question: question_comb})[self.result]
             print(
                 "question:\n  {} \nkg_result:\n  {} \nchat_response:\n  {}".format(question, kg_result, chat_response))
             chat_history.append((question, chat_response))
@@ -71,10 +75,12 @@ class Model_center(object):
         try:
             kg_result = self.get_kb_graph(question)
             if kg_result:
-                question = "我的问题是 :{} 请参考查询的资料:{} 来回答我的问题，请按照你自己的理解，尽量用温和的语气鼓励，安慰提问者。总是在回答的最后说“谢谢你的提问".format(
+                question_comb = "我的问题是 :{} 请参考查询的资料:{} 来回答我的问题，请按照你自己的理解，尽量用温和的语气鼓励，安慰提问者。总是在回答的最后说“谢谢你的提问".format(
                     question, kg_result)
+            else:
+                question_comb = copy.deepcopy(question)
 
-            chat_response = self.chain({self.question: question})[self.result]
+            chat_response = self.chain({self.question: question_comb})[self.result]
             print(
                 "question:\n  {} \nkg_result:\n  {} \nchat_response:\n  {}".format(question, kg_result, chat_response))
             print("=====session end =====\n")

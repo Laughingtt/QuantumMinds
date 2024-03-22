@@ -43,7 +43,7 @@ def run_gr():
     block = gr.Blocks()
     with block as demo:
         with gr.Row(equal_height=True):
-            gr.Image('images/yingying.webp', width=100, scale=0)
+            gr.Image('images/yingying.webp', width=100, scale=0, show_label=False, show_download_button=False)
             # 展示的页面标题
             gr.Markdown(
                 '''
@@ -56,7 +56,7 @@ def run_gr():
                 ''')
 
         # 创建一个聊天机器人对象
-        chatbot = gr.Chatbot(height=700, bubble_full_width=False, show_label=False,
+        chatbot = gr.Chatbot(height=550, bubble_full_width=False, show_label=False,
                              avatar_images=("images/xiaobai.png", "images/yingying.webp")
                              )
         first = """    ### 唠五毛 - 为你提供情绪价值的智能机器人"""
@@ -100,6 +100,6 @@ def run_gr():
 
 if __name__ == '__main__':
     # 创建一个 Web 界面
-    model_center = Model_center(qa_mode=1)
+    model_center = Model_center(qa_mode=2)
 
     run_gr()
